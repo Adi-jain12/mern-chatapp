@@ -1,11 +1,27 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
+	const navigate = useNavigate();
 
-	const handleRegister = () => {};
+	const handleRegister = async (e) => {
+		e.preventDefault();
+
+		const response = await fetch(`http://localhost:3000/api/v1/auth/register`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ email, password }),
+		});
+
+		if (!response.ok) throw new Error('Error creating user');
+
+		navigate('/');
+	};
 
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -60,9 +76,9 @@ const Register = () => {
 				</form>
 				<p className="text-center text-gray-600 mt-4">
 					Already have an account?{' '}
-					<a href="/login" className="text-blue-500 hover:underline">
+					<Link to="/" className="text-blue-500 hover:underline">
 						Login here
-					</a>
+					</Link>
 					.
 				</p>
 			</div>

@@ -1,6 +1,27 @@
+import { useEffect } from 'react';
 import Login from '../components/Login';
+import { useNavigate } from 'react-router';
 
 export const Home = () => {
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		const verifyUser = async () => {
+			const response = await fetch(
+				`http://localhost:3000/api/v1/auth/validate-token`,
+				{
+					credentials: 'include',
+				}
+			);
+
+			if (!response.ok) throw new Error('Error');
+
+			navigate('/chat');
+		};
+
+		verifyUser();
+	}, []);
+
 	return (
 		<div className="grid grid-cols-[1fr_1fr] h-screen">
 			<Login />

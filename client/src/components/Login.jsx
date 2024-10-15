@@ -1,10 +1,31 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const navigate = useNavigate();
 
-	const handleLogin = () => {};
+	const handleLogin = async (e) => {
+		e.preventDefault();
+
+		const response = await fetch(`http://localhost:3000/api/v1/auth/login`, {
+			method: 'POST',
+			credentials: 'include',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ email, password }),
+		});
+
+		if (!response.ok) throw new Error('Error creating user');
+
+		const data = await response.json();
+
+		window.localStorage.setItem('userId', data.userId);
+
+		navigate('/chat');
+	};
 
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -46,9 +67,9 @@ const Login = () => {
 				</form>
 				<p className="text-center text-gray-600 mt-4">
 					Don&apos;t have an account?{' '}
-					<a href="/register" className="text-blue-500 hover:underline">
+					<Link to="/register" className="text-blue-500 hover:underline">
 						Register here
-					</a>
+					</Link>
 					.
 				</p>
 			</div>
