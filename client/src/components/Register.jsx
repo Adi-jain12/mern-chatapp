@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const Register = () => {
 	const [email, setEmail] = useState('');
 	const [name, setName] = useState('');
@@ -18,16 +20,13 @@ const Register = () => {
 		}
 
 		try {
-			const response = await fetch(
-				`http://localhost:3000/api/v1/auth/register`,
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({ email, name, password }),
-				}
-			);
+			const response = await fetch(`${API_BASE_URL}/api/v1/auth/register`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ email, name, password }),
+			});
 
 			if (!response.ok) throw new Error('Error creating user');
 

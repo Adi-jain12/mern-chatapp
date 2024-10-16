@@ -3,13 +3,15 @@ import Login from '../components/Login';
 import { useNavigate } from 'react-router';
 import chat from '../../public/chat.gif';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const Home = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		const verifyUser = async () => {
 			const response = await fetch(
-				`http://localhost:3000/api/v1/auth/validate-token`,
+				`${API_BASE_URL}/api/v1/auth/validate-token`,
 				{
 					credentials: 'include',
 				}

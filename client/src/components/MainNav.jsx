@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { MdLogout } from 'react-icons/md';
 import { useNavigate } from 'react-router';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const MainNav = ({ setStartChat, setChats, setReceiverId }) => {
 	const [users, setUsers] = useState([]);
 	const [activeUserId, setActiveUserId] = useState(null);
@@ -10,12 +12,9 @@ const MainNav = ({ setStartChat, setChats, setReceiverId }) => {
 	useEffect(() => {
 		const fetchUsers = async () => {
 			try {
-				const response = await fetch(
-					`http://localhost:3000/api/v1/user/users`,
-					{
-						credentials: 'include',
-					}
-				);
+				const response = await fetch(`${API_BASE_URL}/api/v1/user/users`, {
+					credentials: 'include',
+				});
 
 				const data = await response.json();
 
@@ -33,7 +32,7 @@ const MainNav = ({ setStartChat, setChats, setReceiverId }) => {
 	const handleStartChat = async (id) => {
 		try {
 			const response = await fetch(
-				`http://localhost:3000/api/v1/chat/message/${id}`,
+				`${API_BASE_URL}/api/v1/chat/message/${id}`,
 				{ credentials: 'include' }
 			);
 
@@ -54,7 +53,7 @@ const MainNav = ({ setStartChat, setChats, setReceiverId }) => {
 	};
 
 	const handleLogout = async () => {
-		const response = await fetch(`http://localhost:3000/api/v1/auth/logout`, {
+		const response = await fetch(`${API_BASE_URL}/api/v1/auth/logout`, {
 			credentials: 'include',
 			method: 'POST',
 		});

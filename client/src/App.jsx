@@ -3,8 +3,9 @@ import { Home } from './pages/Home';
 import Register from './components/Register';
 import Chat from './components/Chat';
 import io from 'socket.io-client';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-const socket = io.connect('http://localhost:3000');
+const socket = io.connect(API_BASE_URL);
 
 function App() {
 	return (

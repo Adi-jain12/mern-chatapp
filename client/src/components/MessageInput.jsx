@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BsFillSendFill } from 'react-icons/bs';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const MessageInput = ({ receiverId, setChats }) => {
 	const [message, setMessage] = useState('');
@@ -10,7 +11,7 @@ const MessageInput = ({ receiverId, setChats }) => {
 		if (!message.trim()) return;
 		try {
 			const response = await fetch(
-				`http://localhost:3000/api/v1/chat/message/${receiverId}`,
+				`${API_BASE_URL}/api/v1/chat/message/${receiverId}`,
 				{
 					method: 'POST',
 					credentials: 'include',
