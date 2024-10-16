@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { MdLogout } from 'react-icons/md';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -54,11 +54,11 @@ const MainNav = ({ setStartChat, setChats, setReceiverId }) => {
 
 	const handleLogout = async () => {
 		const response = await fetch(`${API_BASE_URL}/api/v1/auth/logout`, {
-			credentials: 'include',
 			method: 'POST',
+			credentials: 'include',
 		});
 
-		if (!response) {
+		if (!response.ok) {
 			throw new Error('Error during log out');
 		}
 
