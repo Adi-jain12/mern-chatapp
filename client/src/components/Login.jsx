@@ -4,33 +4,46 @@ import { Link, useNavigate } from 'react-router-dom';
 const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [errorMessage, setErrorMessage] = useState('');
 	const navigate = useNavigate();
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
 
-		const response = await fetch(`http://localhost:3000/api/v1/auth/login`, {
-			method: 'POST',
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ email, password }),
-		});
+		try {
+			const response = await fetch(`http://localhost:3000/api/v1/auth/login`, {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ email, password }),
+			});
 
-		if (!response.ok) throw new Error('Error creating user');
+			if (!response.ok) {
+				if (response.status === 401) {
+					setErrorMessage('Invalid email or password');
+				} else {
+					setErrorMessage('Invalid credentials. Please try again.');
+				}
+				return;
+			}
 
-		const data = await response.json();
+			const data = await response.json();
 
-		window.localStorage.setItem('userId', data.userId);
-
-		navigate('/chat');
+			window.localStorage.setItem('userId', data.userId);
+			window.localStorage.setItem('name', data.name);
+			navigate('/chat');
+		} catch (error) {
+			console.log(error);
+			setErrorMessage('Error logging in. Please try again later.');
+		}
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-gray-100">
+		<div className="min-h-screen flex items-center justify-center bg-orange-500">
 			<div className="max-w-md w-full bg-white p-6 rounded-lg shadow-md">
-				<h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
+				<h2 className="text-2xl font-bold text-center mb-6">Login</h2>
 				<form onSubmit={handleLogin}>
 					<div className="mb-4">
 						<label htmlFor="email" className="block text-gray-700">
@@ -58,9 +71,12 @@ const Login = () => {
 							required
 						/>
 					</div>
+
+					{errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
+
 					<button
 						type="submit"
-						className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300"
+						className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600 transition duration-300"
 					>
 						Login
 					</button>

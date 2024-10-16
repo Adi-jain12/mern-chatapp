@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
+import { MdLogout } from 'react-icons/md';
+import { useNavigate } from 'react-router';
 
 const MainNav = ({ setStartChat, setChats, setReceiverId }) => {
 	const [users, setUsers] = useState([]);
+	const [activeUserId, setActiveUserId] = useState(null);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchUsers = async () => {
@@ -37,13 +41,16 @@ const MainNav = ({ setStartChat, setChats, setReceiverId }) => {
 
 			setChats(data.message);
 		} catch (error) {
-			if (error.message === 'Error getting messages') setChats([]);
+			if (error.message === 'Conversation not found') {
+				setChats([]);
+			}
 
 			console.log(error);
 		}
 
 		setStartChat(true);
 		setReceiverId(id);
+		setActiveUserId(id);
 	};
 
 	const handleLogout = async () => {
@@ -55,21 +62,32 @@ const MainNav = ({ setStartChat, setChats, setReceiverId }) => {
 		if (!response) {
 			throw new Error('Error during log out');
 		}
+
+		navigate('/');
 	};
 
 	return (
 		<nav className="flex flex-col justify-between h-full">
 			<div>
 				{users.length > 0 ? (
-					<ul className="flex flex-col">
+					<ul className="flex flex-col gap-2">
 						{users.map((user) => (
 							<li
 								key={user._id}
 								onClick={() => handleStartChat(user._id)}
-								className="flex items-center border-b border-gray-100 justify-between gap-3 py-7 px-8 cursor-pointer transition-all duration-300 hover:bg-gray-200"
+								className={`flex items-center border-b border-gray-300 justify-between gap-3 py-7 px-8 cursor-pointer transition-all duration-300
+            ${
+							activeUserId === user._id
+								? 'bg-orange-500'
+								: 'hover:bg-orange-500'
+						}`}
 							>
-								<span className="text-lg font-medium text-gray-700">
-									{user.email}
+								<span
+									className={`text-lg font-medium transition-colors duration-300 ${
+										activeUserId === user._id ? 'text-white' : 'text-gray-700'
+									}`}
+								>
+									{user.name}
 								</span>
 							</li>
 						))}
@@ -78,11 +96,9 @@ const MainNav = ({ setStartChat, setChats, setReceiverId }) => {
 					<div className="text-gray-600 text-center mt-4">No Users</div>
 				)}
 			</div>
-			<button
-				onClick={() => handleLogout}
-				className="mb-6 w-full bg-red-500 text-white py-2 px-4 rounded-lg transition duration-300 hover:bg-red-600"
-			>
-				Logout
+
+			<button onClick={handleLogout} className="my-14 mx-6 w-full p-4">
+				<MdLogout size={30} />
 			</button>
 		</nav>
 	);

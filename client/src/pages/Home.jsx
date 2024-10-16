@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import Login from '../components/Login';
 import { useNavigate } from 'react-router';
+import chat from '../../public/chat.gif';
 
 export const Home = () => {
 	const navigate = useNavigate();
@@ -26,8 +27,10 @@ export const Home = () => {
 		<div className="grid grid-cols-[1fr_1fr] h-screen">
 			<Login />
 
-			<main className="bg-blue-600 p-16 pb-24">
-				<div className="max-w-[120rem] mx-auto flex flex-col gap-8"></div>
+			<main className="p-16 pb-24">
+				<div className="max-w-[120rem] mx-auto flex flex-col gap-8">
+					<img src={chat} alt="chat" />
+				</div>
 			</main>
 		</div>
 	);

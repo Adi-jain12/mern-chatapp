@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 export const registerUser = async (req, res) => {
-	const { email, password } = req.body;
+	const { email, password, name } = req.body;
 
 	try {
 		const user = await User.findOne({ email });
@@ -14,6 +14,7 @@ export const registerUser = async (req, res) => {
 		const newUser = new User({
 			email,
 			password: hashedPassword,
+			name,
 		});
 
 		await newUser.save();
@@ -46,7 +47,7 @@ export const loginUser = async (req, res) => {
 			maxAge: 86400000,
 		});
 
-		res.status(200).json({ userId: user._id });
+		res.status(200).json({ userId: user._id, name: user.name });
 	} catch (error) {
 		return res.status(500).json({ message: 'Error logging in!' });
 	}
