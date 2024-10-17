@@ -36,14 +36,13 @@ const MainNav = ({ setStartChat, setChats, setReceiverId }) => {
 				{ credentials: 'include' }
 			);
 
-			const data = await response.json();
-
-			setChats(data.message);
-		} catch (error) {
-			if (error.message === 'Conversation not found') {
+			if (response.status === 404) {
 				setChats([]);
+			} else {
+				const data = await response.json();
+				setChats(data.message);
 			}
-
+		} catch (error) {
 			console.log(error);
 		}
 
